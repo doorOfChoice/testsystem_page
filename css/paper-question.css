@@ -1,0 +1,20 @@
+.box {
+   display: flex;
+   justify-content:space-around;
+}
+
+.box-index {
+   width: 10%;
+}
+
+.box-input {
+    width: 10%;
+}
+
+.box-content {
+    width: 80%;
+}
+
+.box-equal {
+    width: 30%;
+}

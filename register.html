@@ -2,41 +2,57 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>试题管理-注册</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/register.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="js/register.js"></script>
+  <meta charset="utf-8">
+  <title>试题管理-注册</title>
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/register.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/register.js"></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-8 mainTable">
-                <h2 class="defaultFont title">用户注册</h2>
-                <div class="textCenter">
-                    <div class="username"> <span class="defaultFont">用户名:</span>
-                        <input type="text" name="info" class="inputClass" />
-                        <span style="color:red">*</span></div>
-                    <div class="password"> <span class="defaultFont">密码:</span>
-                        <input type="text" name="info" class="inputClass" />
-                        <span style="color:red">*</span></div>
-                    <div>
-                    <div class="username"> <span class="defaultFont">昵称:</span>
-                        <input type="text" name="info" class="inputClass" />
-                        <span style="color:red">*</span></div>
-                    <div>
-                        <button id="register" class="btn btn-primary defaultFont btn-lg buttonRegister" type="submit">立即注册</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-            </div>
+  <div class="container">
+    <div class="register">
+      <div class="row">
+        <div class="col-md-2">
         </div>
+
+        <div class="col-md-8 mainTable">
+          <h2 class="defaultFont title">用户注册</h2>
+          <div class="textCenter">
+            <div class="username"><span class="defaultFont">用户名:</span>
+              <input type="text" name="info" class="inputClass" />
+              <span style="color:red">*</span></div>
+            <div class="password">
+              <span class="defaultFont">密码:</span>
+              <input type="password" name="info" class="inputClass" />
+              <span style="color:red">*</span></div>
+            <div>
+              <div class="password"><span class="defaultFont">昵称:</span>
+                <input type="text" name="info" class="inputClass" />
+                <span style="color:red">*</span></div>
+              <div>
+                <div class="username">
+                  <span class="defaultFont">身份：</span>
+                  <select class="defaultFont" name="">
+                    <option value="">教师</option>
+                    <option value="">学生</option>
+                  </select>
+                </div>
+
+
+                <button id="register" class="btn btn-primary defaultFont btn-lg buttonRegister" type="submit">立即注册</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+      </div>
+
+
     </div>
 </body>
 

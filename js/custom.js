@@ -1,136 +1,234 @@
-function Custom(){
+function Custom() {
+  //生成非简答题的选项
+  this.generateNoReplyOption = function (data, args = {}) {
+    //配置选项
+    var config = $.extend({
+      type: 'radio',
+      forbidden: true,
+      answer: true
+    }, args);
 
-  this.getExercise = function(data, hasOption = true, isBan = true, isPaper = false, showAnswer = true){
-    var panel = $('<div class="exercise">').attr('id', data.id);
-    var title = data.content;
-    if(data.grade != 0)
-      title += '(' + data.grade + '分)';
-    panel.append($('<pre>').text(title));
-    panel.append('<span class="label label-primary tag">' + data.subject + '</span>');
-    panel.append('<span class="label label-primary tag">' + data.type + '</span>');
-    if(hasOption){
-      if(data.type == '单选题'){
-        panel.append(
-          this.getOption({options:data.options, isBan:isBan, showAnswer : showAnswer})
-        );
-      }else if(data.type == '多选题'){
-        panel.append(
-          this.getOption({
-            options:data.options,
-            type   :'checkbox',
-            isBan  :isBan,
-            showAnswer : showAnswer
-          })
-        );
-      }else if(data.type == '判断题'){
-        panel.append(
-          this.getOption({
-            options:data.options,
-            isJudge:true,
-            isBan  :isBan,
-            showAnswer : showAnswer
-          })
-        );
-      }else if(data.type == '简答题'){
-        panel.append(this.getContext(data.options));
+    var assembly = {
+      judge: 'radio',
+      radio: 'radio',
+      multi: 'checkbox'
+    };
+
+    options = data.options;
+    parentId = data.id;
+    var optionPane = $('<div>');
+    for (var i = 0; i < options.length; ++i) {
+      var singleOptionPane = $('<div class="box">');
+      var index = $('<p class="box-index">').text(String.fromCharCode(i + 65));
+      var content = $('<p class="box-content">').text(options[i].content);
+      var option = $('<input class="box-input">').attr({
+        type: assembly[config.type],
+        name: 'option-' + parentId,
+        id: 'option-' + options[i].id
+      });
+
+      //是否允许操作选项
+      if (config.forbidden) {
+        option.attr('disabled', 'true');
       }
+
+      //是否显示答案
+      if (options[i].correct == 1) {
+        if (config.answer) {
+          option.attr('checked', 'true');
+        }
+        if (config.type == 'judge') {
+          content = content.text('√');
+        }
+      } else {
+        if (config.type == 'judge') {
+          content = content.text('×');
+        }
+      }
+
+
+      singleOptionPane.append(index, option, content);
+      optionPane.append(singleOptionPane);
     }
-    return panel;
+
+    return optionPane;
+  };
+
+  //生成问答题的选项
+  this.generateReplyOption = function (data, args = {}) {
+    var config = $.extend({
+      forbidden: true,
+      answer: true
+    }, args);
+
+    var options = data.options;
+    var optionPane = $('<div>');
+    var singleOptionPane = $('<div>');
+
+    var textarea = $('<textarea>').addClass('form-control');
+
+    if (config.forbidden) {
+      textarea.attr('disabled', true);
+    }
+
+    if (config.answer) {
+      textarea.val(options[0].content);
+    }
+
+    return singleOptionPane.append(textarea);
   }
 
-  this.getOption = function(dataNew){
-    data = $.extend( {
-      options : {},       //数据
-      isBan   : true,     //是否禁止操作
-      isJudge : false,    //是否是判断题
-      index   : 0,        //选项递增类型
-      type    : 'radio',   //input类型
-      showAnswer : true
-    }, dataNew);
-    var panel = $("<div class='row'>");
-    panel.addClass('radio');
+  //生成问题
+  this.generateQuestion = function (data, args) {
+    var config = $.extend({
+      forbidden: true,
+      answer: true,
+      tag: true
+    }, args);
 
-    var isBan = data.isBan;
-    var options = data.options;
-    var content = data.content;
-    var optionPanel;
-    for(var i = 0, len = options.length; i < len; i++){
-        var optionPane    = $('<div>');
-        var colLabel      = $('<label class="content">');
-        var colPanelLeft  = $('<div>').addClass('col-sm-1 col-md-1 col-xs-1');
-        var colPanelRight = $('<div>').addClass('col-sm-11 col-md-11 col-xs-11');
-        var input         = $('<input >').attr({
-          type : data.type,
-          name : 'corrects[]',
-          id   : options[i].id,
-        });
+    var grade = data.grade != null ? '(分数:' + data.grade + ')' : '';
 
-        if(data.showAnswer && options[i].correct){
-          input.attr('checked', true);
-        }
-        if(isBan){
-          input.attr('disabled', true);
-        }
-        colPanelLeft.append(data.index == 0 ? String.fromCharCode(i + 65) : '');
-        colPanelRight.append(colLabel.append(input));
-        var sym = data.isJudge ? (options[i].correct ? '√' : '×') : options[i].content;
-        colLabel.html(colLabel.html() + sym);
-        optionPane.append(colPanelLeft, colPanelRight);
-        panel.append(optionPane);
+    var qPanel = $('<div>')
+      .addClass('single-question')
+      .attr('id', 'question-' + data.id);
+    var qPanelContent = $('<pre>').text(data.content + grade);
+    var qPanelSubject = $('<span class="label label-warning">').text("科目:" + data.subject_name);
+    var qPanelHot = $('<span class="label label-danger">').text("访问量:" + data.hot);
+    var qPanelType = $('<span class="label label-success">').text(data.type_name);
+    if (config.tag) {
+      var qPanelTagsPane = $('<div class="tag-panel">')
+        .html('<span class="label label-default">知识点</span><br/>');
+      (data.tags).forEach(function (element) {
+        var tag = $('<span class="label label-info">').text(element.name);
+        qPanelTagsPane.append(tag);
+      });
     }
 
-    return panel;
+    var qPanelOptionPane = $('<div>');
+
+
+    var result;
+    switch (data.type_name) {
+      case "单选题":
+        config.type = 'radio';
+        result = this.generateNoReplyOption(data, config);
+        break;
+      case "多选题":
+        config.type = 'multi';
+        result = this.generateNoReplyOption(data, config);
+        break;
+      case "判断题":
+        config.type = 'judge';
+        result = this.generateNoReplyOption(data, config);
+        break;
+      case "简答题":
+        result = this.generateReplyOption(data, config);
+        break;
+    }
+    qPanelOptionPane.append(result)
+
+    qPanel.append(qPanelContent, qPanelSubject, qPanelHot, qPanelType);
+    if (config.tag) {
+      qPanel.append(qPanelTagsPane);
+    }
+    qPanel.append(qPanelOptionPane);
+
+    return qPanel;
   };
 
-  //生成一个简答题预览
-  this.getContext = function(data){
-    var panel = $("<div>");
-    panel.append('<p>' + data[0].content + '</p>');
+  //生成试卷
+  this.generatePaper = function (data, args = {}) {
+    var config = $.extend({
+      forbidden: true,
+      answer: true,
+      tag: true
+    }, args);
+    var $main = $('<div>')
+      .attr('id', 'paper')
+      .addClass('paper-' + data.datas.id);
+    var $baseMessage = $('<div>').addClass('box');
+    var $pCreator = $('<p>')
+      .addClass('box-equal')
+      .text("创建人:" + data.datas.teacher_id);
+    var $pSubject = $('<p>')
+      .addClass('box-equal')
+      .text("科目:" + data.datas.subject_name);
+    var $pCreateDate = $('<p>')
+      .addClass('box-equal')
+      .text("创建时间:" + data.datas.create_date);
+    $baseMessage.append($pCreator, $pSubject, $pCreateDate);
+    var $head = $('<h1 align="center" id="header">').append(data.datas.title);
+    $main.append($head).append($baseMessage);
 
-    return panel;
+    $that = this;
+
+    (data.datas.questions).forEach(function (element, index) {
+      $main.append($('<p>').html('<span class="label label-default">[问题' + index + ']</span>'));
+      $main.append($that.generateQuestion(element, config));
+    });
+
+    return $main;
   };
-
 
   //获取查询字符串参数
-  this.getQueryParams = function(_url){
-      var url   = _url;
-      var start = url.indexOf('?');
-      var obj = {};
+  this.getQueryParams = function (_url) {
+    var url = _url;
+    var start = url.indexOf('?');
+    var obj = {};
 
-      if(start === -1)
-        return obj;
-
-      var preg  = /((\w+)=(\w+))/ig;
-      var queryString = url.substring(start + 1);
-      while(r = preg.exec(queryString)){
-        obj[r[2]] = r[3];
-      }
+    if (start === -1)
       return obj;
+
+    var preg = /((\w+)=(\w+))/ig;
+    var queryString = url.substring(start + 1);
+    while (r = preg.exec(queryString)) {
+      obj[r[2]] = r[3];
+    }
+    return obj;
   };
+
+  this.getId = function (str) {
+    var id = str.slice(str.indexOf('-') + 1);
+    return id;
+  }
+
+  this.getFunc = function(args) {
+    return function(args) {
+      return args;
+    };
+  }
+
 }
 
 //倒计时函数
-function TimeCount(){
+function TimeCount() {
   this.count = 3600;
   this.machine = null;
 
-  this.countDown = function(flag){
-    var hour   = parseInt(this.count / 3600);
+  this.countDown = function (flag) {
+    var hour = parseInt(this.count / 3600);
     var minute = parseInt((this.count - hour * 3600) / 60);
     var second = parseInt((this.count - hour * 3600 - minute * 60));
     $(flag).text("剩下时间 " + hour + ":" + minute + ":" + second);
-    if(this.count-- <= 0)
+    if (this.count-- <= 0)
       this.stop();
   };
 
-  this.stop = function(){
+  this.stop = function () {
     clearInterval(this.machine);
   };
 
-  this.start = function(flag){
+  this.start = function (flag) {
     var that = this;
-    this.machine = setInterval(function(){
+    this.machine = setInterval(function () {
       return that.countDown(flag);
     }, 1000);
   }
 }
+
+
+
+
+
+var custom  = new Custom();
+var timeout = new TimeCount();

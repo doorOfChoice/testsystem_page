@@ -5,45 +5,13 @@
     <title>试题预览</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="css/paper-question.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/custom.js"></script>
-    <script type="text/javascript">
-      $(function(){
-        var custom = new Custom();
-        var params = custom.getQueryParams(window.location.href);
-        $.get('https://api.seeonce.cn/chicken/public/papers/' + params.id)
-         .done(function(data){
-           var ps = data.data;
-           if(data.code == 200){
-             $("#main").append($('<h1 class="center">').text(ps.title));
-             $("#main").append($('<p  class="center">').text(ps.create_date));
-             var qs = ps.questions.questions;
-             qs.forEach(function(value, index, array){
-               $('#main').append(custom.getExercise(value, true));
-             });
-           }else{
-             //window.location.href="error.html?error=0";
-           }
-         }).fail(function(){
-            //window.location.href="error.html?error=0";
-         });
-      });
-    </script>
-    <style media="screen">
-    pre{
-      overflow-x: hidden;
-      white-space: normal;
-    }
+    <script type="text/javascript" src="js/single-paper.js"></script>
+    
 
-    .tag{
-      font-size: 0.8em;
-      margin-right: 10px;
-    }
-
-    .center{
-      text-align: center;
-    }
-    </style>
   </head>
 
   <body>

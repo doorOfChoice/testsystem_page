@@ -1,0 +1,86 @@
+.nav{
+  width: auto;
+  height: 65px;
+  background-color: gray;
+}
+
+.nav a:link,.nav a:visited{
+  color: white;
+}
+.nav a:hover,.nav a:active{
+  color: red;
+}
+.student{
+  height: 700px;
+  width: auto;
+}
+.paper{
+  height: 700px;
+  width: auto;
+}
+  table{
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #999999;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  table th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+  }
+
+  table td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+  }
+
+ *{
+    cursor:  pointer;
+  }
+
+  .navigator li .inner{
+    position: absolute;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    transition: opacity 0.5s ;
+    z-index: 9999999;
+  }
+  .navigator li:hover .inner{
+    opacity: 1;
+  }
+
+  .inner {
+    background-color: white;
+  }
+  .inner li {
+    margin: 0 0 5px 0;
+    padding: 0;
+    display: block;
+    background-color: white;
+  }
+  .navigator > li{
+    float: right;
+    margin-left: 30px;
+    margin-top : 15px;
+    list-style: none;
+  }
+
+  
+  .box {
+    display: flex;
+  }
+
+  .box .child{
+    width: 30%;
+  }
+
+  

@@ -5,48 +5,36 @@
     <title></title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/paper-question.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/custom.js"></script>
     <script type="text/javascript">
-      $(function(){
-        var custom = new Custom();
-        var params = custom.getQueryParams(window.location.href);
-        // $.get('https://api.seeonce.cn/chicken/public/questions' + params.id)
-        $.get('https://api.seeonce.cn/chicken/public/questions/' + params.id)
-         .done(function(data){
-             var qs = data.data;
-             if(data.code == 200){
-               $("#main").append(custom.getExercise(qs));
-             }else{
-               // window.location.href="error.html?error=0";
-             }
-         }).fail(function(){
-            // window.location.href="error.html?error=0";
-         });
+      $(function() {
+        $queryParams = custom.getQueryParams(document.location.href);
+        
+        $.ajax({
+          url : 'https://api.seeonce.cn/paper/public/v2/question/' + $queryParams.id,
+          method : 'GET',
+          statusCode : {
+            200 :function(data) {
+              $('#main').append($('<h1>').text('题目:'));
+              $("#main").append(custom.generateQuestion(data.datas));
+            },
+            404 :function() {
+
+            }
+          }
+        });
+
       });
     </script>
-
-    <style media="screen">
-    pre{
-      overflow-x: hidden;
-      white-space: normal;
-    }
-
-    .tag{
-      font-size: 0.8em;
-      margin-right: 10px;
-    }
-    </style>
-
   </head>
   <body>
     <div class="container">
 
       <div class="row">
         <div class="col-md-offset-2 col-md-8" id="main">
-          <div class="page-header" >
-            <h1 style="text-align:center">题目详情</h1>
-          </div>
+          
         </div>
       </div>
     </div>

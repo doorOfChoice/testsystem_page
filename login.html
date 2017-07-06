@@ -1,27 +1,100 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>试题管理-登录</title>
-    <link rel="stylesheet" href="bs/css/bootstrap.min.css">
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript">
-    $(function(){
-		$('#bt').click(function(){
-    		console.log($('#se')[0].value);
-    	});
+<head>
+<meta charset="utf-8"/>
+<title>登录</title>
+<meta name="author" content="DeathGhost" />
+<link rel="shortcut icon" href="images/favicon.ico">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style2.css">
+<link rel="stylesheet" href="css/style3.css">
+<style>
+body{height:100%;background:#16a085;overflow:hidden;}
+canvas{z-index:-1;position:absolute;}
+</style>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script src="js/Particleground.js" tppabs="js/Particleground.js"></script>
+
+<script>
+$(document).ready(function() {
+  //粒子背景特效
+  $('body').particleground({
+    dotColor: '#5cbdaa',
+    lineColor: '#5cbdaa'
+  });
+});
+</script>
+
+<!-- 学生登陆 -->
+<script type="text/javascript">
+$(function(){
+  $("#submit").click(function(){
+    $.post('https://api.seeonce.cn/chicken/public/user',{
+      username:$("#username").val(),
+      password:$("#password").val()
+    }).done(function(data){
+      if(data.code == 200){
+        window.location.href='user_manager.html';
+      }
+      else
+        alert("登陆失败");
+    }).fail(function() {
+        alert("链接服务器失败");
     });
-    	
-    </script>
-    <meta name="viewport"  content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <select id='se'>
-    	<option value="sdadasd">123</option>
-    	<option>321</option>
-    	<option>222</option>
-    	<option>444</option>
-    </select>
-    <button id='bt'>hello</button>
-  </body>
+  });
+});
+</script>
+
+
+</head>
+<body>
+<dl id="student" class="admin_login">
+ <dt>
+  <strong>试题管理系统</strong>
+  <em>Management System</em>
+ </dt>
+<!-- <p>
+  <input id="stu_btn" type="button" name="" value="学生">
+  <input id="tch_btn" type="button" name="" value="教师">
+  <input id="adm_btn"type="button" name="" value="admin"></p> -->
+ <dd class="user_icon">
+  <input id="username" type="text" placeholder="账号" class="login_txtbx"/>
+ </dd>
+ <dd class="pwd_icon">
+  <input id="password" type="password" placeholder="密码" class="login_txtbx"/>
+ </dd>
+
+ <dd>
+  <input id="submit" type="button" value="立即登陆" class="submit_btn"/>
+ </dd>
+
+ <dd>
+  <p>© 2016-2017 Chicken 版权所有</p>
+ </dd>
+</dl>
+
+
+<!-- <dl id="student" class="admin_login">
+ <dt>
+  <strong>试题管理系统</strong>
+  <em>Management System</em>
+ </dt>
+ <dd class="user_icon">
+  <input id="username" type="text" placeholder="教师号" class="login_txtbx"/>
+ </dd>
+ <dd class="pwd_icon">
+  <input id="password" type="password" placeholder="密码" class="login_txtbx"/>
+ </dd>
+
+ <dd>
+  <input id="submit" type="button" value="立即登陆" class="submit_btn"/>
+ </dd>
+ <dd>
+  <p>© 2016-2017 Chicken 版权所有</p>
+ </dd>
+</dl> -->
+
+
+
+</body>
 </html>

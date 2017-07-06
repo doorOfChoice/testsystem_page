@@ -5,6 +5,12 @@ var subjectData;
 var ifCreatePaper = false;
 
 $(document).ready(function() {
+	$.get('https://api.seeonce.cn/chicken/public/user')
+	 .done(function(data){
+		 if(data.code == 200){
+			 alert('yes');
+		 }
+	 });
 	// $.ajax({
  //        url:"https://api.seeonce.cn/chicken/public",
  //        method:"get",
@@ -17,7 +23,7 @@ $(document).ready(function() {
 	//         }
 	//         }).fail(function(){
 
-	//         });	
+	//         });
 	$.get('https://api.seeonce.cn/chicken/public/types', {}, function(data){
 		typeData = data.data;
 		var len = typeData.length;
@@ -48,7 +54,7 @@ $(document).ready(function() {
 			$("#createNewPaperSubject").append("<option value='"+subjectData[i].id+"'>"+subjectData[i].name+"</option>");
 		}
 	})
-	
+
 
     $("#personalMessage").click(function() {
     	ifCreatePaper = false;
@@ -160,7 +166,7 @@ $(document).ready(function() {
     	if(rightAnswer=="C")
     		rightAnswers[2] = true;
     	if(rightAnswer=="D")
-    		rightAnswers[3] = true;  	
+    		rightAnswers[3] = true;
 
     	if(!ifCreatePaper){
 		$.ajax({
@@ -191,7 +197,7 @@ $(document).ready(function() {
 	       }
 	   }).fail(function(){
 
-	   });			
+	   });
     	}
     	else{
     	var paperId = $("#editorPaperId").val();
@@ -226,7 +232,7 @@ $(document).ready(function() {
 	        }
 	        }).fail(function(){
 
-	        });	
+	        });
 			}
    		 });
 
@@ -237,15 +243,10 @@ $(document).ready(function() {
     	var checkBoxSubject = $("#checkBoxSubject").val();
 
     	var rightAnswersTemp = [false,false,false,false];
-    	if(rightAnswers[0].value=="1")	
-    		rightAnswersTemp[0]=true;
-    	if(rightAnswers[1].value=="1")	
-    		rightAnswersTemp[1]=true;
-    	if(rightAnswers[2].value=="1")	
-    		rightAnswersTemp[2]=true;
-    	if(rightAnswers[3].value=="1")	
-    		rightAnswersTemp[3]=true;
-
+    	rightAnswersTemp[0]=$(rightAnswers[0]).is(':checked');
+    	rightAnswersTemp[1]=$(rightAnswers[1]).is(':checked');
+			rightAnswersTemp[2]=$(rightAnswers[2]).is(':checked');
+			rightAnswersTemp[3]=$(rightAnswers[3]).is(':checked');
     	if(!ifCreatePaper){
 		$.ajax({
             url:"https://api.seeonce.cn/chicken/public/questions",
@@ -278,7 +279,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });	
+        });
     }
 		else{
 		var paperId = $("#editorPaperId").val();
@@ -316,7 +317,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });	
+        });
 		}
     });
 
@@ -326,12 +327,8 @@ $(document).ready(function() {
     	var answer = document.getElementsByName("tfChoice");
     	var trueFalseSubject = $("#trueFalseSubject").val();
     	var rightAnswers = [false,false];
-    	if(answer[0].value=="1"){
-    		rightAnswers[0] = true;
-    	}
-    	if(answer[1].value=="1"){
-    		rightAnswers[1] = true;
-    	}
+    	rightAnswers[0] =$(answer[0]).is(':checked');
+    	rightAnswers[1] =$(answer[1]).is(':checked');
 
     	if(!ifCreatePaper){
 		$.ajax({
@@ -360,7 +357,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });	
+        });
     	}
 		else{
 		var paperId = $("#editorPaperId").val();
@@ -394,7 +391,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });			
+        });
 		}
 
 		$("#tfTitle").val("");
@@ -408,7 +405,7 @@ $(document).ready(function() {
     $("#essaySubmit").click(function(){
     	var title = $("#essayTitle").val();
     	var essaySubject = $("#essaySubject").val();
-    	var rightAnswer = $("#essayAnswer").val();
+    	var rightAnswer  = $("#essayAnswer").val();
 
     	if(!ifCreatePaper){
 		$.ajax({
@@ -423,7 +420,7 @@ $(document).ready(function() {
             }
         }
         ).done(function(data){
-        if(data.code==200){
+        if(data.code == 200){
 			alert("操作成功");
 			$("#essayTitle").val("");
 			$("#essayAnswer").val("");
@@ -435,7 +432,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });		
+        });
 		}else{
 		var paperId = $("#editorPaperId").val();
     	var grade = $("#editorPaperQuestionGrade").val();
@@ -465,14 +462,14 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });		
+        });
 
 		}
-		
+
     });
 
     $("#createNewPaper").click(function(){
-    	var title = $("#createNewPaperTitile").val(); 	
+    	var title = $("#createNewPaperTitile").val();
     	var createNewPaperSubject = $("#createNewPaperSubject").val();
 		$.ajax({
             url:"https://api.seeonce.cn/chicken/public/papers",
@@ -492,7 +489,7 @@ $(document).ready(function() {
         }
         }).fail(function(){
 
-        });		
+        });
     });
 
     $("#selectAll").click(function(){
@@ -581,7 +578,7 @@ function loadOperator(id) {
 }
 
 function checkQuestionInfo(id){
-	window.open('single-question.html?id=' + id);   
+	window.open('single-question.html?id=' + id);
 }
 
 var paperPageSize; //每页显示的记录条数
@@ -602,7 +599,7 @@ function showPaper(){
 		    "<td><input type='checkbox' name='selectPaper' value='"+paper[i].id+"'></td>" +
 		    "<td>" + paper[i].id + "</td>" +
 		    "<td>" + paper[i].username + "</td>" +
-		    "<td>" + paper[i].title + "</td>" +
+		    "<td>" + '<a href="paper-test.html?id=' + paper[i].id + '">'+ paper[i].title + "</a></td>" +
 		    "<td>" + paper[i].create_date + "</td>" +
 		    "<td>" + loadPaperOperator(paper[i].id) + "</td>" +
 		    "</tr>");
@@ -618,7 +615,7 @@ function loadPaperOperator(id) {
 }
 
 function checkPaperInfo(id){
-	window.open('single-paper.html?id=' + id);   
+	window.open('single-paper.html?id=' + id);
 }
 
 function createPaper(){

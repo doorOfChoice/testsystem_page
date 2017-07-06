@@ -12,6 +12,7 @@ $(document).ready(function() {
         }).done(function(data) {
             if (data.code == 200) {
                 alert("操作成功");
+                window.location.href='login.html';
             }
             if (data.code == 400) {
                 alert("操作失败");
