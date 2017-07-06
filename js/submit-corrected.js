@@ -12,12 +12,14 @@ $(function () {
       },
       statusCode: {
         200: function (data) {
-          $("#main").append(custom.generatePaper(data, {
-            tag: false,
-            answer: false,
-            forbidden: true
-          }));
+        //   $("#main").append(custom.generatePaper(data, {
+        //     tag: false,
+        //     answer: false,
+        //     forbidden: true
+        //   }));
+        
           (data.datas.questions).forEach(function(element) {
+            $("#main").append(custom.generateQuestion(element));
             custom.analyseDescription(element);
           });
         },

@@ -77,7 +77,18 @@ function Custom() {
 
     return singleOptionPane.append(textarea);
   }
-
+  this.analyseDescription = function(data) {
+      var $description = data.description;
+      var $typename = data.type_name;
+      if($typename == '简答题') {
+        $('#question-' + data.id).find('textarea').val(data.description);
+      }else {
+        $arr = (data.description).split(',');
+        $arr.forEach(function(element) {
+          $('#option-' + element).attr('checked', true);
+        });
+      }
+  }
   //生成问题
   this.generateQuestion = function (data, args) {
     var config = $.extend({
@@ -86,15 +97,30 @@ function Custom() {
       tag: true
     }, args);
 
-    var grade = data.grade != null ? '(分数:' + data.grade + ')' : '';
+    var grade = '';
+    if(data.max_grade == null) {
+      grade = data.grade != null ? '(分数:' + data.grade + ')' : '';
+    }else {
+      if(data.has_correct)
+        grade = '[得分:' + data.current_grade + '](试题分值:' + data.max_grade + ')';
+      else
+        grade = '<b style="color:red">[未批改]</b>(试题分值:' + data.max_grade + ')';
+    }
 
     var qPanel = $('<div>')
       .addClass('single-question')
       .attr('id', 'question-' + data.id);
-    var qPanelContent = $('<pre>').text(data.content + grade);
+
+    var qPanelContent = $('<pre>').text(data.content).append(
+      $('<span>').html(grade)
+    );
+
     var qPanelSubject = $('<span class="label label-warning">').text("科目:" + data.subject_name);
+
     var qPanelHot = $('<span class="label label-danger">').text("访问量:" + data.hot);
+
     var qPanelType = $('<span class="label label-success">').text(data.type_name);
+
     if (config.tag) {
       var qPanelTagsPane = $('<div class="tag-panel">')
         .html('<span class="label label-default">知识点</span><br/>');
@@ -126,13 +152,11 @@ function Custom() {
         break;
     }
     qPanelOptionPane.append(result)
-
     qPanel.append(qPanelContent, qPanelSubject, qPanelHot, qPanelType);
     if (config.tag) {
       qPanel.append(qPanelTagsPane);
     }
     qPanel.append(qPanelOptionPane);
-
     return qPanel;
   };
 
@@ -143,21 +167,23 @@ function Custom() {
       answer: true,
       tag: true
     }, args);
+    var $data = data.datas;
+    var $submit = $data.paper == null;
     var $main = $('<div>')
       .attr('id', 'paper')
-      .addClass('paper-' + data.datas.id);
+      .addClass('paper-' + ($submit ? $data.id : $data.paper.id));
     var $baseMessage = $('<div>').addClass('box');
     var $pCreator = $('<p>')
       .addClass('box-equal')
-      .text("创建人:" + data.datas.teacher_id);
+      .text("创建人:" + ($submit ? $data.teacher_id : $data.paper.teacher_id));
     var $pSubject = $('<p>')
       .addClass('box-equal')
-      .text("科目:" + data.datas.subject_name);
+      .text("科目:" + ($submit ? $data.subject_name : $data.paper.subject_name));
     var $pCreateDate = $('<p>')
       .addClass('box-equal')
-      .text("创建时间:" + data.datas.create_date);
+      .text("创建时间:" + ($submit ? $data.create_date : $data.paper.create_date));
     $baseMessage.append($pCreator, $pSubject, $pCreateDate);
-    var $head = $('<h1 align="center" id="header">').append(data.datas.title);
+    var $head = $('<h1 align="center" id="header">').append($submit ? $data.title : $data.paper.title);
     $main.append($head).append($baseMessage);
 
     $that = this;

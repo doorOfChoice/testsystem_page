@@ -72,7 +72,8 @@ $(function () {
     $panel_array = [];
     $data.forEach(function (element) {
       $panel = $('<div>').addClass('paper-view');
-      $title = $('<h1>').text(element.title);
+      $link = $('<a>').attr('href', 'paper-test.html?id=' + element.id).text(element.title);
+      $title = $('<h1>').append($link);
       $creator = $('<p>')
         .addClass('child')
         .text('创建人:' + element.teacher_id);
@@ -93,10 +94,10 @@ $(function () {
       $link = $('<a>')
             .text(element.title)
             .attr('href', 
-            'https://api.seeonce.cn/paper/public/v2/paper/' 
-            + element.paper_id + '/student/'
-            + element.student_id + '/teacher/'
-            + element.paper_id);
+            'corrected-paper.html?pid=' 
+            + element.paper_id + '&sid='
+            + element.student_id + '&tid='
+            + element.teacher_id);
       $title = $('<h1>').append($link);
       $creator = $('<p>')
         .addClass('child')
